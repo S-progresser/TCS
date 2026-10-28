@@ -1,0 +1,5 @@
+Deductible: The fixed amount a policyholder pays before insurance coverage begins.
+Co-pay: The share of the eligible service cost paid by the insured customer.
+Discharge summary: Hospital document confirming treatment details, diagnosis, and discharge status.
+Pre-authorization: The insurer approval required before treatment or a procedure begins.
+Garage estimate: Repair estimate provided by the authorized service center.

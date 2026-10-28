@@ -1,0 +1,34 @@
+[
+  {
+    "id": "rule-coverage",
+    "title": "Coverage eligibility",
+    "category": "coverage",
+    "source": "Policy Handbook Section 4",
+    "summary": "Eligible hospitalization claims require proof of treatment, billing documentation, discharge summary, and policy validity at the time of treatment.",
+    "keywords": ["coverage", "eligibility", "hospitalization", "policy", "claims"]
+  },
+  {
+    "id": "rule-documents",
+    "title": "Document checklist",
+    "category": "documents",
+    "source": "Claim Operations Manual",
+    "summary": "Missing or mismatched documents can delay payment. Final discharge certificate, original invoice, and hospital signed forms are required before settlement.",
+    "keywords": ["documents", "invoice", "bill", "discharge", "missing"]
+  },
+  {
+    "id": "rule-deductible",
+    "title": "Deductible and co-pay",
+    "category": "financials",
+    "source": "Policy Annex A",
+    "summary": "The approved claim amount is reduced by the applicable deductible and co-pay as per the selected plan. The claim advisor should clearly explain these calculations.",
+    "keywords": ["deductible", "copay", "co-pay", "payout", "amount"]
+  },
+  {
+    "id": "rule-motor",
+    "title": "Motor repair and garage flow",
+    "category": "motor",
+    "source": "Garage Assistance Protocol",
+    "summary": "Motor claims need photos, a repair estimate, and invoice matching to confirm the repair value before the settlement is approved.",
+    "keywords": ["motor", "garage", "repair", "estimate", "accident"]
+  }
+]

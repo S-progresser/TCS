@@ -1,0 +1,23 @@
+[
+  {
+    "id": "chunk-coverage",
+    "title": "Coverage and documentation",
+    "text": "Hospitalization claims are approved after verifying the member's policy status, treatment records, hospital discharge summary, and the final invoice. Missing documents are a leading cause of claim delay.",
+    "source": "Policy Handbook Section 4",
+    "tags": ["coverage", "documents", "hospitals"]
+  },
+  {
+    "id": "chunk-deductible",
+    "title": "Deductible explanation",
+    "text": "The deductible and co-pay are deducted from the approved claim value before the payout is calculated. Customers should receive a simple explanation of these deductions in plain language.",
+    "source": "Policy Annex A",
+    "tags": ["deductible", "copay", "payout"]
+  },
+  {
+    "id": "chunk-motor",
+    "title": "Motor claim repair guidance",
+    "text": "For motor accidents, the insurer compares the garage estimate with the pre-approval photos and damage records. An itemized invoice is required before final approval.",
+    "source": "Garage Assistance Protocol",
+    "tags": ["motor", "repair", "garage"]
+  }
+]

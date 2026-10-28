@@ -1,0 +1,20 @@
+[
+  {
+    "title": "IRDAI Claim Disclosure",
+    "source": "IRDAI / Claims Guidance",
+    "url": "https://www.irdai.gov.in/",
+    "summary": "Insurance claims require complete documents and transparent disclosures."
+  },
+  {
+    "title": "Hospitalization requirements",
+    "source": "Internal policy handbook",
+    "url": "https://example.com/policy",
+    "summary": "Symptoms, diagnosis, treatment plan, and discharge summary should be cross-checked before settlement."
+  },
+  {
+    "title": "Motor damage assessment",
+    "source": "Garage operations guide",
+    "url": "https://example.com/garage",
+    "summary": "Garage invoices and repair estimates should match the claim approval before payment."
+  }
+]

@@ -1,0 +1,5 @@
+ClaimSense Protect policy highlights:
+- Inpatient hospitalization cover begins after the deductible and co-pay application.
+- Claims require a valid identity record, policy number, and final medical documentation.
+- For motor claims, the insurer validates the estimate against the actual repair and associated invoice.
+- Delays often happen when the discharge summary or original invoice is missing.

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "CLM-3021",
+    "customer_name": "Asha Reddy",
+    "policy_number": "TCS-HL-77891",
+    "product": "Health Insurance",
+    "claim_type": "hospitalization",
+    "status": "Document review",
+    "claim_amount": 185000,
+    "insurer": "ClaimSense Protect",
+    "branch": "Bengaluru",
+    "summary": "Claim filed for a planned hysterectomy. Final invoice and discharge summary are pending. Coverage remains active under the policy terms.",
+    "deductible": 18000,
+    "copay": 6000,
+    "checklist": [
+      "Hospital discharge summary submitted",
+      "Original bill and invoice attached",
+      "KYC verification complete",
+      "Claim form signed and notarized"
+    ]
+  },
+  {
+    "id": "CLM-1984",
+    "customer_name": "Raghav Nair",
+    "policy_number": "TCS-MT-45082",
+    "product": "Motor Insurance",
+    "claim_type": "accident",
+    "status": "Awaiting garage estimate",
+    "claim_amount": 920000,
+    "insurer": "ClaimSense Drive",
+    "branch": "Kochi",
+    "summary": "Front bumper and suspension repair claim raised after a collision. Garage estimate and photos are pending for repair approval.",
+    "deductible": 25000,
+    "copay": 12000,
+    "checklist": [
+      "Garage estimate submitted",
+      "Police report uploaded",
+      "Vehicle photos attached",
+      "Claim amount verified"
+    ]
+  },
+  {
+    "id": "CLM-5540",
+    "customer_name": "Megha Kulkarni",
+    "policy_number": "TCS-HL-31907",
+    "product": "Critical Illness",
+    "claim_type": "pre-authorisation",
+    "status": "Pre-authorization review",
+    "claim_amount": 420000,
+    "insurer": "ClaimSense Health",
+    "branch": "Pune",
+    "summary": "Critical illness claim is under network approval. Final medical paperwork and hospital pre-authorization signature are pending.",
+    "deductible": 30000,
+    "copay": 8000,
+    "checklist": [
+      "Hospital pre-authorization approved",
+      "Doctor diagnosis document uploaded",
+      "Treatment plan reviewed",
+      "Policy eligibility confirmed"
+    ]
+  }
+]
