@@ -7,4 +7,4 @@ if (-not (Test-Path ".venv")) {
 pip install -r requirements.txt
 Set-Location frontend
 npm install
-npm run dev -- --host 0.0.0.0 --port 5173
+npm.cmd run dev -- --host 0.0.0.0 --port 5173 --strictPort

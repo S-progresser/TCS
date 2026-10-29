@@ -1,4 +1,5 @@
 import asyncio
+import json
 
 import pytest
 
@@ -7,6 +8,7 @@ from backend.app.agents.concierge import ConciergeAgent
 from backend.app.agents.document_analyst import DocumentAnalyst
 from backend.app.agents.explainer_verifier import ExplainerVerifier
 from backend.app.deterministic import build_concierge_plan, calculate_deductible_and_payout, validate_request_schema
+from backend.app.llm import LLMResult
 from backend.app.orchestrator import answer_query
 
 
@@ -43,12 +45,21 @@ async def test_document_analyst_flags_required_gaps():
 
 
 @pytest.mark.asyncio
-async def test_verifier_rejects_unverified_document_draft():
+async def test_verifier_rejects_unverified_document_draft(monkeypatch):
     document_review = type(
         "DocumentReview",
         (),
         {"missing_documents": ["Invoice or bill not found"], "mismatches": ["Claim amount could not be verified"], "next_steps": ["Upload the bill"], "provider_message": "Manual review required"},
     )()
+
+    class DeterministicLLM:
+        settings = type("Settings", (), {"smart_model": "test-smart"})()
+
+        async def generate_result(self, prompt, **kwargs):
+            payload = json.loads(prompt)
+            return LLMResult(content=payload["fallback"], provider="deterministic", fallback=True)
+
+    monkeypatch.setattr("backend.app.agents.explainer_verifier.get_llm_client", lambda: DeterministicLLM())
     result = await ExplainerVerifier().compose(
         claim={"id": "CLM-3021", "status": "in review", "summary": "Hospitalization claim"},
         investigation=type("Investigation", (), {"evidence": ["Rule says documents are required"], "citations": ["Policy guidance"]})(),
@@ -65,6 +76,39 @@ async def test_answer_query_without_document_context_works():
     assert result.claim_id == "CLM-3021"
     assert result.language == "en"
     assert len(result.citations) > 0
+
+
+@pytest.mark.asyncio
+async def test_submit_question_gets_pending_documents_not_only_claim_status(monkeypatch):
+    prompts = []
+
+    class DeterministicLLM:
+        settings = type("Settings", (), {"fast_model": "test-fast", "smart_model": "test-smart"})()
+
+        async def generate_result(self, prompt, **kwargs):
+            prompts.append(prompt)
+            payload = json.loads(prompt)
+            return LLMResult(
+                content=payload["fallback"],
+                provider="deterministic",
+                fallback=True,
+                error="provider_unavailable",
+            )
+
+    monkeypatch.setattr("backend.app.agents.explainer_verifier.get_llm_client", lambda: DeterministicLLM())
+    question = "what do i need to submit?"
+    result = await answer_query("CLM-3021", question, "en")
+
+    assert result.provider == "deterministic"
+    assert "outstanding" in result.answer
+    assert "Hospital discharge summary submitted" in result.answer
+    assert "Final hospital invoice attached" in result.answer
+    assert "currently Document review" not in result.answer
+    assert any("Hospital discharge summary submitted" in action for action in result.next_actions)
+    prompt = json.loads(prompts[0])
+    assert prompt["customer_question"] == question
+    assert prompt["intent"] == "document_review"
+    assert "Hospital discharge summary submitted" in prompt["pending_requirements"]
 
 
 @pytest.mark.asyncio

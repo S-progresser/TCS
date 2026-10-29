@@ -55,14 +55,4 @@ def retrieve_guidance(query: str, *, limit: int = 3) -> list[RetrievalResult]:
                 score=round(float(score), 2),
             )
         )
-    if not results:
-        for doc in docs[:limit]:
-            results.append(
-                RetrievalResult(
-                    title=doc.title,
-                    snippet=doc.text[:180],
-                    source=doc.source,
-                    score=1.0,
-                )
-            )
     return results

@@ -20,17 +20,24 @@ def get_claim_by_id(claim_id: str) -> dict[str, Any] | None:
 
 
 def calculate_readiness(claim: dict[str, Any]) -> ClaimAnalysis:
-    checks = [
-        "Hospital discharge summary submitted",
-        "Original bill and invoice attached",
-        "KYC verification complete",
-        "Claim form signed and notarized",
-        "Final settlement amount verified",
+    product = str(claim.get("product", "")).lower()
+    if "motor" in product:
+        checks = ["Garage estimate submitted", "Vehicle photos attached", "Police report uploaded", "Claim amount verified", "Final garage invoice received"]
+    elif "critical" in product or "pre-author" in str(claim.get("claim_type", "")).lower():
+        checks = ["Hospital pre-authorization approved", "Doctor diagnosis document uploaded", "Treatment plan reviewed", "Policy eligibility confirmed", "Hospital signature verified"]
+    else:
+        checks = ["Hospital discharge summary submitted", "Final hospital invoice attached", "KYC verification complete", "Claim form signed and notarized", "Treatment date and claim amount verified"]
+    completed_values = {str(item).strip().casefold() for item in claim.get("checklist", [])}
+    aliases = {
+        "Final hospital invoice attached": {"original bill and invoice attached", "original invoice attached"},
+        "Hospital discharge summary submitted": {"discharge summary submitted"},
+    }
+    completed = [
+        item for item in checks
+        if item.casefold() in completed_values or bool(aliases.get(item, set()) & completed_values)
     ]
-    completed = claim.get("checklist", [])
     pending = [item for item in checks if item not in completed]
-    total = len(checks)
-    score = max(35, round((len(completed) / total) * 100))
+    score = round((len(completed) / len(checks)) * 100) if checks else 0
     payout = calculate_deductible_and_payout(claim)
     deductible = payout["deductible"]
     copay = payout["copay"]
@@ -40,16 +47,12 @@ def calculate_readiness(claim: dict[str, Any]) -> ClaimAnalysis:
         readiness_score=score,
         status=claim.get("status", "in_review"),
         summary=claim.get("summary", "Claim in review"),
-        checklist=completed or checks[:2],
-        next_steps=[
-            "Upload the missing discharge summary and final bill.",
-            "Confirm treatment dates and provider details.",
-            "Follow up with the hospital for the original invoice.",
-        ],
+        checklist=completed,
+        next_steps=[f"Complete: {item}." for item in pending],
         deductible=float(deductible),
         copay=float(copay),
         estimated_payout=max(0, float(estimate)),
-        risk_flags=[item for item in ["Missing discharge summary", "Pending invoice verification"] if item in pending],
+        risk_flags=pending,
     )
 
 
@@ -98,7 +101,7 @@ async def answer_query(claim_id: str, question: str, language: str = "en", docum
         raise ValueError(f"Unknown claim id: {claim_id}")
 
     concierge = ConciergeAgent()
-    plan = concierge.plan(question, claim_id=claim_id, document_context=document_context).plan
+    plan = (await concierge.understand(question, claim_id=claim_id, document_context=document_context)).plan
 
     if plan.language != language:
         plan.language = language
@@ -108,32 +111,27 @@ async def answer_query(claim_id: str, question: str, language: str = "en", docum
     explainer_verifier = ExplainerVerifier()
 
     investigator_task = investigator.investigate(claim_id, plan.normalized_query, plan.language)
+    claim_for_response = {**claim, "analysis": calculate_readiness(claim).model_dump()}
     document_task = None
-    if plan.needs_document_analysis and document_context is not None:
+    if document_context is not None:
         document_task = document_analyst.analyze(filename="uploaded-document", text=document_context, claim=claim)
 
     if document_task is None:
         investigation = await investigator_task
         final_response = await explainer_verifier.compose(
-            claim=claim,
+            claim=claim_for_response,
             investigation=investigation,
             plan=plan,
-            fallback_answer=(
-                f"Your claim {claim['id']} is currently in {claim['status']} status. Based on the insurer's policy rules, "
-                "the next required action is to submit the final discharge summary and invoice to close the document review step."
-            ),
+            fallback_answer=None,
         )
         return final_response
 
     investigation, document_result = await asyncio.gather(investigator_task, document_task)
     final_response = await explainer_verifier.compose(
-        claim=claim,
+        claim=claim_for_response,
         investigation=investigation,
         document_review=document_result,
         plan=plan,
-        fallback_answer=(
-            f"Your claim {claim['id']} is currently in {claim['status']} status. Based on the insurer's policy rules, "
-            "the next required action is to submit the final discharge summary and invoice to close the document review step."
-        ),
+        fallback_answer=None,
     )
     return final_response

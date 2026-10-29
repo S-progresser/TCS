@@ -20,7 +20,8 @@ def detect_language(question: str) -> str:
 def detect_intent(question: str) -> str:
     lowered = normalize_query(question)
     document_tokens = [
-        "missing", "document", "invoice", "bill", "discharge", "upload",
+        "missing", "document", "invoice", "bill", "discharge", "upload", "submit",
+        "submission", "paperwork", "required document", "what do i need", "provide",
         "दस्तावेज़", "बिल", "डिस्चार्ज", "दावा", "अपलोड", "कमी", "दर्ज़", "दाखला"
     ]
     coverage_tokens = ["coverage", "policy", "deductible", "claim amount", "benefit", "पॉलिसी", "कवर"]
@@ -70,7 +71,8 @@ def build_concierge_plan(question: str, *, claim_id: str | None = None) -> Execu
     intent = detect_intent(question)
     tone = detect_tone(question)
     document_indicators = [
-        "document", "invoice", "bill", "discharge", "upload", "missing",
+        "document", "invoice", "bill", "discharge", "upload", "missing", "submit",
+        "submission", "paperwork", "required document", "what do i need", "provide",
         "दस्तावेज़", "बिल", "डिस्चार्ज", "दाखला", "अपलोड", "कमी", "दर्ज़",
     ]
     needs_document_analysis = any(token in normalized for token in document_indicators)

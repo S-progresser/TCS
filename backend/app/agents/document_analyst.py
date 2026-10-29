@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from backend.app.deterministic import compare_name_date_amount, escalation_rules, has_document_gap
+from backend.app.schemas import DocumentReview, PolicyRule
 
 
 @dataclass
@@ -20,6 +21,18 @@ class DocumentAnalysisResult:
 
 
 class DocumentAnalyst:
+    async def validate_extracted_document(
+        self,
+        *,
+        filename: str,
+        extraction: Any,
+        claim: dict[str, Any],
+        rulebook: PolicyRule,
+    ) -> DocumentReview:
+        from backend.app.document_processing import _validate_document
+
+        return _validate_document(filename=filename, extraction=extraction, claim=claim, rule=rulebook)
+
     async def analyze(self, *, filename: str, text: str | None, claim: dict[str, Any] | None = None) -> DocumentAnalysisResult:
         from backend.app.orchestrator import validate_document
 

@@ -13,7 +13,11 @@
     "category": "documents",
     "source": "Claim Operations Manual",
     "summary": "Missing or mismatched documents can delay payment. Final discharge certificate, original invoice, and hospital signed forms are required before settlement.",
-    "keywords": ["documents", "invoice", "bill", "discharge", "missing"]
+    "keywords": ["documents", "invoice", "bill", "discharge", "missing"],
+    "required_documents": ["Final hospital invoice", "Hospital discharge summary"],
+    "required_fields": ["claimant name", "treatment date", "bill amount"],
+    "itemization_required": true,
+    "signature_required": true
   },
   {
     "id": "rule-deductible",
@@ -29,6 +33,10 @@
     "category": "motor",
     "source": "Garage Assistance Protocol",
     "summary": "Motor claims need photos, a repair estimate, and invoice matching to confirm the repair value before the settlement is approved.",
-    "keywords": ["motor", "garage", "repair", "estimate", "accident"]
+    "keywords": ["motor", "garage", "repair", "estimate", "accident"],
+    "required_documents": ["Garage repair estimate", "Vehicle damage photos"],
+    "required_fields": ["vehicle registration", "incident date", "estimate amount"],
+    "itemization_required": false,
+    "signature_required": false
   }
 ]

@@ -21,19 +21,43 @@ ClaimSense is an AI-powered insurance claim explanation assistant designed for t
 
 ## Quick start
 
-1. Create a virtual environment and install Python dependencies:
-   `python -m venv .venv` and `pip install -r requirements.txt`
-2. Install frontend dependencies:
-   `cd frontend && npm install`
-3. Start backend:
-   `uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000`
-4. Start frontend:
-   `cd frontend && npm run dev -- --host 0.0.0.0 --port 5173`
-5. Open the frontend in the browser.
+Start the backend and frontend independently in separate PowerShell terminals.
+
+Backend:
+
+```powershell
+cd D:\ClaimSense
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+Frontend:
+
+```powershell
+cd D:\ClaimSense\frontend
+npm.cmd install
+npm.cmd run dev -- --host 0.0.0.0 --port 5173 --strictPort
+```
+
+Open `http://localhost:5173/`. The frontend can render independently; API-backed actions use the Vite `/api` proxy to `http://localhost:8000`.
+
+## Groq configuration
+
+Groq is the primary LLM provider. Create a backend `.env` from the placeholder template and set the API key there; never put it in frontend variables or source files:
+
+```powershell
+cd D:\ClaimSense
+Copy-Item .env.example .env
+# Edit .env and set GROQ_API_KEY to your Groq API key.
+```
+
+Backend settings are `GROQ_API_KEY`, `GROQ_BASE_URL`, `FAST_MODEL`, `SMART_MODEL`, `VISION_MODEL`, `FALLBACK_MODEL`, and `REPLAY`. The template provides the Groq API URL and model defaults; override model IDs only with models available to your Groq account. `REPLAY=true` enables replay mode. Without a key, deterministic responses remain available and diagnostics report `not_configured`; check provider connectivity at `http://localhost:8000/api/health/groq`.
 
 ## Assumptions
 
-- Default behavior works without external AI keys and uses deterministic rule-based responses.
+- Deterministic document checks and fallback responses work without external AI keys; live Groq-powered interpretation requires `GROQ_API_KEY`.
 - The project intentionally uses JSON-backed synthetic data instead of a database.
 - The app keeps claim simulations simple and demo-friendly while still showing realistic insurance flows.
 

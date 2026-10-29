@@ -26,6 +26,10 @@ class PolicyRule(BaseModel):
     source: str
     summary: str
     keywords: list[str] = Field(default_factory=list)
+    required_documents: list[str] = Field(default_factory=list)
+    required_fields: list[str] = Field(default_factory=list)
+    itemization_required: bool = False
+    signature_required: bool = False
 
 
 class KnowledgeChunk(BaseModel):
@@ -50,16 +54,33 @@ class QueryRequest(BaseModel):
     document_context: str | None = None
 
 
+class ConciergePlanOutput(BaseModel):
+    language: Literal["en", "hi", "kn"]
+    intent: Literal["document_review", "coverage_check", "claim_status", "general_claim_help"]
+    tone: Literal["neutral", "urgent", "frustrated"]
+    normalized_query: str
+    needs_document_analysis: bool
+
+
 class DocumentReview(BaseModel):
     filename: str
     valid: bool
-    score: int
-    missing_documents: list[str]
-    mismatches: list[str]
-    next_steps: list[str]
+    score: int | None
+    missing_documents: list[str] = Field(default_factory=list)
+    mismatches: list[str] = Field(default_factory=list)
+    next_steps: list[str] = Field(default_factory=list)
     fields_missing: list[str] = Field(default_factory=list)
     fields_unverified: list[str] = Field(default_factory=list)
     provider_message: str | None = None
+    claim_id: str | None = None
+    extraction_status: Literal["extracted", "unreadable", "unsupported"] = "extracted"
+    extraction_message: str | None = None
+    extracted_fields: dict[str, str] = Field(default_factory=dict)
+    checks_passed: list[str] = Field(default_factory=list)
+    readiness_score: int | None = None
+    replayed: bool = False
+    provider: str = "deterministic"
+    extracted_document_type: str | None = None
 
 
 class ClaimAnalysis(BaseModel):
@@ -82,6 +103,7 @@ class QueryResponse(BaseModel):
     language: str
     next_actions: list[str]
     confidence: float
+    provider: str = "deterministic"
 
 
 class StreamEvent(BaseModel):

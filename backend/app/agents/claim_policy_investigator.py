@@ -23,7 +23,9 @@ class ClaimPolicyInvestigator:
         if claim is None:
             raise ValueError(f"Unknown claim id: {claim_id}")
 
-        guidance = retrieve_guidance(normalized_query)
+        guidance = retrieve_guidance(
+            " ".join((normalized_query, str(claim.get("product", "")), str(claim.get("summary", ""))))
+        )
         rulebooks = load_rulebooks()
         relevant_rules = [rule for rule in rulebooks if any(keyword in normalized_query for keyword in rule.keywords) or rule.category in {"documents", "coverage"}]
         deductions = calculate_deductible_and_payout(claim)
@@ -35,8 +37,6 @@ class ClaimPolicyInvestigator:
 
         evidence = [result.snippet for result in guidance[:3]]
         citations = [result.source for result in guidance[:3]]
-        if not citations:
-            citations = ["Internal claim policy", "IRDAI guidance"]
         rule_hits = [rule.title for rule in relevant_rules[:3]]
 
         return InvestigationResult(

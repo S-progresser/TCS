@@ -12,9 +12,8 @@
     "summary": "Claim filed for a planned hysterectomy. Final invoice and discharge summary are pending. Coverage remains active under the policy terms.",
     "deductible": 18000,
     "copay": 6000,
+    "treatment_date": "2026-10-28",
     "checklist": [
-      "Hospital discharge summary submitted",
-      "Original bill and invoice attached",
       "KYC verification complete",
       "Claim form signed and notarized"
     ]
@@ -33,9 +32,7 @@
     "deductible": 25000,
     "copay": 12000,
     "checklist": [
-      "Garage estimate submitted",
       "Police report uploaded",
-      "Vehicle photos attached",
       "Claim amount verified"
     ]
   },
